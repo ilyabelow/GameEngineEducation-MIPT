@@ -4,6 +4,18 @@
 #include "RenderProxy.h"
 #include "../RenderBackend/IRenderData.h"
 
+namespace
+{
+	struct PosColorVertex
+	{
+		float x;
+		float y;
+		float z;
+		uint32_t abgr;
+	};
+};
+
+
 class RENDERENGINE_API RenderObject
 {
 public:
@@ -21,7 +33,10 @@ public:
 
 	void GetPosition(float* result) { m_pRenderProxy->GetPosition(result); }
 	IRenderData* GetRenderData() const { return m_pRenderData; }
+	bool ShouldBeRendered() const { return m_pRenderProxy->ShouldBeRendered(); }
+
 	void SetRenderData(IRenderData* renderData) { m_pRenderData = renderData; }
+	void SetRenderState(bool value) { m_pRenderProxy->SetRenderState(value); }
 
 protected:
 	RenderProxy* m_pRenderProxy;

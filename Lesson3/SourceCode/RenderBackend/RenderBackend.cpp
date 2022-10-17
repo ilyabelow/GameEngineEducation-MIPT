@@ -11,7 +11,7 @@ void RenderBackend::Init()
 	bgfx::renderFrame();
 
 	bgfx::Init bgfxInit;
-	bgfxInit.type = bgfx::RendererType::Direct3D12;
+	bgfxInit.type = bgfx::RendererType::Direct3D11;
 	bgfxInit.resolution.width = 800;
 	bgfxInit.resolution.height = 600;
 	bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
@@ -42,8 +42,8 @@ IRenderData* RenderBackend::CreateRenderObject(
 
 void RenderBackend::SetViewTransform()
 {
-	const bx::Vec3 at = { 0.0f, 0.0f,  0.0f };
-	const bx::Vec3 eye = { 0.0f, 10.0f, -5.0f };
+	const bx::Vec3 at = { 0.0f, 0.0f, -5.f };
+	const bx::Vec3 eye = { 0.0f, 32.0f, -40.0f };
 	float view[16];
 	bx::mtxLookAt(view, eye, at);
 	float proj[16];

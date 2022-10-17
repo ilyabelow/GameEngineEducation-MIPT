@@ -12,6 +12,17 @@
 #include "CubeGameObject.h"
 #include "GameTimer.h"
 
+#include "inih/INIReader.h"
+#include <unordered_map>
+
+#define VK_W    0x57
+#define VK_A    0x41
+#define VK_S    0x53
+#define VK_D    0x44
+
+bool isKeyPressed(unsigned int key) {
+    return GetKeyState(key) & 0x8000;
+}
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -22,6 +33,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #if defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
+
+    std::unordered_map<std::string, unsigned int> inputMap;
+    inputMap["W"] = VK_W;
+    inputMap["A"] = VK_A;
+    inputMap["S"] = VK_S;
+    inputMap["D"] = VK_D;
+    inputMap["LEFT ARROW"]  =  VK_LEFT;
+    inputMap["RIGHT ARROW"] = VK_RIGHT;
+    inputMap["UP ARROW"]    =    VK_UP;
+    inputMap["DOWN ARROW"]  =  VK_DOWN;
+
+    std::unordered_map<std::string, unsigned int> controls;
+
+    INIReader reader("actionmap.ini");
+    std::set<std::string> fields = reader.GetFields("Keyboard");
+
+    for (const std::string& field : fields) {
+        std::string command = field;
+        std::string symbol = reader.Get("Keyboard", field, "");
+
+        for (char& letter : symbol)
+            letter = std::toupper(letter);
+
+        controls[command] = inputMap[symbol];
+    }
 
     GameTimer timer;
 
@@ -48,8 +84,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             float t = 0;
             timer.Tick();
-            t = sin(timer.TotalTime())*2;
-            cube->SetPosition(t, 0.0f, 0.0f);
+
+            float moveX = 0.f, moveY = 0.f, moveZ = 0.f;
+
+            if (isKeyPressed(controls["Move Up"])) {
+                moveZ += 3.f * timer.DeltaTime();
+            }
+            if (isKeyPressed(controls["Move Down"])) {
+                moveZ -= 3.f * timer.DeltaTime();
+            }
+
+            if (isKeyPressed(controls["Move Right"])) {
+                moveX += 3.f * timer.DeltaTime();
+            }
+            if (isKeyPressed(controls["Move Left"])) {
+                moveX -= 3.f * timer.DeltaTime();
+            }
+
+
+            cube->Move(moveX, moveY, moveZ);
 
             renderThread->OnEndFrame();
         }

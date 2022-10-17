@@ -1,1 +1,0 @@
-#include "CubeRenderProxy.h"

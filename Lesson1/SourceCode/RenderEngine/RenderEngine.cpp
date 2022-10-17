@@ -1,4 +1,6 @@
 #include <bx/math.h>
+#include "bx/timer.h"
+#include <cmath>
 
 #include "RenderEngine.h"
 
@@ -22,7 +24,7 @@ CRenderEngine::CRenderEngine(HINSTANCE hInstance)
 	bgfx::renderFrame();
 
 	bgfx::Init bgfxInit;
-	bgfxInit.type = bgfx::RendererType::Direct3D12;
+	bgfxInit.type = bgfx::RendererType::Direct3D11;
 	bgfxInit.resolution.width = m_Width;
 	bgfxInit.resolution.height = m_Height;
 	bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
@@ -33,6 +35,7 @@ CRenderEngine::CRenderEngine(HINSTANCE hInstance)
 	bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
 	bgfx::setViewRect(0, 0, 0, bgfx::BackbufferRatio::Equal);
 
+	m_timeOffset = bx::getHPCounter();
 	m_defaultCube = new Cube();
 }
 
@@ -100,6 +103,16 @@ void CRenderEngine::Update()
 	float proj[16];
 	bx::mtxProj(proj, 60.0f, float(m_Width) / float(m_Height), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
 	bgfx::setViewTransform(0, view, proj);
+
+	// Move (translate and rotate) octahedron
+	float time = (float)((bx::getHPCounter() - m_timeOffset) / double(bx::getHPFrequency()));
+	float sine = std::sin(time);
+	float mtx[16];
+	bx::mtxRotateXY(mtx, time, time);
+	mtx[12] = 2.f * sine;
+	mtx[13] = 4.f * sine * sine;
+	mtx[14] = 2.f * sine * std::cos(time);
+	bgfx::setTransform(mtx);
 
 	bgfx::setVertexBuffer(0, m_defaultCube->GetVertexBuffer());
 	bgfx::setIndexBuffer(m_defaultCube->GetIndexBuffer());

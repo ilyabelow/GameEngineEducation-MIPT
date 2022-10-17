@@ -21,4 +21,5 @@ private:
 	long m_Width = 800;
 	long m_Height = 600;
 	Cube* m_defaultCube;
+	int64_t m_timeOffset;
 };

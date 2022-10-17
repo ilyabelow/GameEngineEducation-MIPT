@@ -1,13 +1,32 @@
 #include "ecsPhys.h"
 #include <stdlib.h>
 
+#include "ecsMesh.h"
+#include "ecsControl.h"
+#include "ecsSystems.h"
+#include "ObjectRenderProxy.h"
+
 static float rand_flt(float from, float to)
 {
   return from + (float(rand()) / RAND_MAX) * (to - from);
 }
 
+static bool HitboxesIntersect(const Position& pos, const Hitbox& hitbox, const Position& other_pos, const Hitbox& other_hitbox) {
+  return
+    (abs(pos.x - other_pos.x) < (hitbox.x + other_hitbox.x)) &&
+    (abs(pos.y - other_pos.y) < (hitbox.y + other_hitbox.y)) &&
+    (abs(pos.z - other_pos.z) < (hitbox.z + other_hitbox.z));
+}
+
 void register_ecs_phys_systems(flecs::world &ecs)
 {
+  static auto hitboxQuery = ecs.query<
+    const Position, const Hitbox, const Target, const AddToMagazine*, RenderProxyPtr*, Respawnable*
+  >();
+  static auto giveGunQuery = ecs.query<GiveGun>();
+  static auto toCreateQuery = ecs.query<Created>();
+  static auto bulletQuery = ecs.query<Bullet>();
+
   ecs.system<Velocity, const Gravity, BouncePlane*, Position*>()
     .each([&](flecs::entity e, Velocity &vel, const Gravity &grav, BouncePlane *plane, Position *pos)
     {
@@ -22,6 +41,12 @@ void register_ecs_phys_systems(flecs::world &ecs)
       vel.z += grav.z * e.delta_time();
     });
 
+  ecs.system<const Position, const BouncePlane, const SelfDestruct, DestroyTimer*>()
+    .each([&](flecs::entity e, const Position& pos, const BouncePlane& plane, const SelfDestruct& destroyable, DestroyTimer* timer) {
+    float dotPos = plane.x * pos.x + plane.y * pos.y + plane.z * pos.z;
+    if (dotPos <= plane.w && !timer)
+      e.set(DestroyTimer{ destroyable.countdown });
+    });
 
   ecs.system<Velocity, Position, const BouncePlane, const Bounciness>()
     .each([&](Velocity &vel, Position &pos, const BouncePlane &plane, const Bounciness &bounciness)
@@ -66,5 +91,64 @@ void register_ecs_phys_systems(flecs::world &ecs)
       pos.y += rand_flt(-shiver.val, shiver.val);
       pos.z += rand_flt(-shiver.val, shiver.val);
     });
+
+  ecs.system<const Position, const Hitbox, const Bullet, RenderProxyPtr*>()
+    .each([&](flecs::entity e, const Position& pos, const Hitbox& box, const Bullet&, RenderProxyPtr* proxy) {
+      bool self_destruct = false;
+      hitboxQuery.each([&](
+        flecs::entity other, const Position& other_pos, const Hitbox& other_box,
+        const Target& enemy, const AddToMagazine* magBonus, RenderProxyPtr* other_proxy, Respawnable* respawn
+        ) {
+        if (e.id() != other.id() && HitboxesIntersect(pos, box, other_pos, other_box)) {
+          if (other_proxy)
+            other_proxy->ptr->SetRenderState(false);
+
+          if (magBonus)
+            giveGunQuery.each([&](GiveGun& gun) {
+            gun.numberOfBullets += magBonus->val;
+              });
+
+          if (respawn) {
+            int targetsToSpawn = 1;
+            int targetsSpawned = 0;
+            toCreateQuery.each([&](flecs::entity new_e, Created&) {
+              if (targetsSpawned++ < targetsToSpawn)
+                new_e.mut(e)
+                .set(Position{ other_pos.x, 0.f, other_pos.z })
+                .set(RespawnTimer{ respawn->e, 5.0f })
+                .remove<Created>();
+              });
+            other.mut(e).destruct();
+            self_destruct = true;
+          }
+        }
+        });
+      if (self_destruct) {
+        if (proxy)
+          proxy->ptr->SetRenderState(false);
+        e.destruct();
+      }
+
+    });
+
+  ecs.system<DestroyTimer, RenderProxyPtr*>()
+    .each([&](flecs::entity e, DestroyTimer& timer, RenderProxyPtr* proxy) {
+      timer.timeElapsed += ecs.delta_time();
+      if (timer.timeElapsed > timer.time) {
+        if (proxy)
+          proxy->ptr->SetRenderState(false);
+        e.destruct();
+      }
+    });
+
+  ecs.system<RespawnTimer>()
+    .each([&](flecs::entity e, RespawnTimer& timer) {
+      timer.timeElapsed += ecs.delta_time();
+      if (timer.timeElapsed > timer.time)
+        e.is_a(timer.e)
+        .add<CubeMesh>()
+        .set(Respawnable{ timer.e })
+        .remove<RespawnTimer>();
+      });
 }
 

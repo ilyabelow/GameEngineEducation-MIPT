@@ -90,12 +90,14 @@ void RenderEngine::Update()
 
 	for (auto* renderObject : m_renderObjects)
 	{
-		float position[3];
-		renderObject->GetPosition(position);
-		IRenderData* renderData = renderObject->GetRenderData();
-		renderData->SetPosition(position);
+		if (renderObject->ShouldBeRendered()) {
+			float position[3];
+			renderObject->GetPosition(position);
+			IRenderData* renderData = renderObject->GetRenderData();
+			renderData->SetPosition(position);
 
-		m_pRenderBackend->Draw(renderData);
+			m_pRenderBackend->Draw(renderData);
+		}
 	}
 
 	m_pRenderBackend->DrawFrame();
@@ -104,6 +106,20 @@ void RenderEngine::Update()
 void RenderEngine::CreateCubeRenderObject(RenderProxy* renderProxy)
 {
 	RenderObject* renderObject = new CubeRenderObject(renderProxy);
+
+	IRenderData* renderData = m_pRenderBackend->CreateRenderObject(
+		renderObject->GetVertices(), renderObject->GetVerticesSize(),
+		renderObject->GetIndices(), renderObject->GetIndicesSize(),
+		renderObject->GetVsShaderName(), renderObject->GetPsShaderName()
+	);
+
+	renderObject->SetRenderData(renderData);
+	m_renderObjects.emplace_back(renderObject);
+}
+
+void RenderEngine::CreateIcosahedronRenderObject(RenderProxy* renderProxy)
+{
+	RenderObject* renderObject = new IcosahedronRenderObject(renderProxy);
 
 	IRenderData* renderData = m_pRenderBackend->CreateRenderObject(
 		renderObject->GetVertices(), renderObject->GetVerticesSize(),

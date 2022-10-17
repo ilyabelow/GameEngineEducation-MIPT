@@ -36,6 +36,14 @@ struct FrictionAmount
   float val;
 };
 
+struct Hitbox {
+	float x, y, z;
+};
+
+struct SelfDestruct {
+	float countdown = 5.f;
+};
+
 typedef float Speed;
 
 void register_ecs_phys_systems(flecs::world &ecs);
