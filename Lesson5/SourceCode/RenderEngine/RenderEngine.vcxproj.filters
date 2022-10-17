@@ -36,7 +36,10 @@
     <ClInclude Include="RenderProxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CubeRenderProxy.h">
+    <ClInclude Include="DefaultGeometry\IcosahedronRenderObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectRenderProxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,7 +59,10 @@
     <ClCompile Include="RenderProxy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CubeRenderProxy.cpp">
+    <ClCompile Include="DefaultGeometry\IcosahedronRenderObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectRenderProxy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,6 +6,7 @@
 #include "RenderObject.h"
 #include "RenderProxy.h"
 #include "DefaultGeometry/CubeRenderObject.h"
+#include "DefaultGeometry/IcosahedronRenderObject.h"
 
 class RenderThread;
 class IRenderBackend;
@@ -27,6 +28,7 @@ public:
 private:
 	void Init();
 	void CreateCubeRenderObject(RenderProxy* renderProxy);
+	void CreateIcosahedronRenderObject(RenderProxy* renderProxy);
 
 	HWND InitMainWindow(HINSTANCE hInstance);
 	HWND m_hwnd = nullptr;

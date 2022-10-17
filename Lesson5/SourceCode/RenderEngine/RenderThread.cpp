@@ -62,6 +62,15 @@ void RenderThread::EnqueueCommand(ERenderCommand command, Args... args)
 				std::forward<Args>(args)...)
 		);
 		break;
+
+	case RC_CreateIcosahedronRenderObject:
+		m_commands[m_nFrameToFill].push_back(
+			new EnqueuedRenderCommand(
+				[this](RenderProxy* renderProxy) { m_pRenderEngine->CreateIcosahedronRenderObject(renderProxy); },
+				std::forward<Args>(args)...)
+		);
+		break;
+
 	default:
 		assert(0);
 		break;
@@ -100,11 +109,11 @@ void RenderThread::SwitchFrame()
 	else
 	{
 		m_nFrameToFill = GetNextFrame(m_nFrameToFill);
-		
+
 		if (m_nCurrFrame == m_nFrameToFill)
 		{
 			std::unique_lock lock(frameMutex[m_nFrameToFill]);
-			cv.wait(lock, [this]{ return !m_commandListIsReady; });
+			cv.wait(lock, [this] { return !m_commandListIsReady; });
 			m_commandListIsReady = true;
 		}
 	}

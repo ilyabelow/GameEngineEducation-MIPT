@@ -43,7 +43,7 @@ IRenderData* RenderBackend::CreateRenderObject(
 void RenderBackend::SetViewTransform()
 {
 	const bx::Vec3 at = { 0.0f, 0.0f,  0.0f };
-	const bx::Vec3 eye = { 0.0f, 10.0f, -5.0f };
+	const bx::Vec3 eye = { 0.0f, 7.0f, -10.0f };
 	float view[16];
 	bx::mtxLookAt(view, eye, at);
 	float proj[16];
@@ -58,7 +58,7 @@ void RenderBackend::Draw(IRenderData* renderObject)
 	float mtx[16];
 	bx::mtxRotateXYZ(mtx, 0, 0, 0);
 
-	float translate[3] = {0.0f, 0.0f, 0.0f};
+	float translate[3] = { 0.0f, 0.0f, 0.0f };
 	renderObject->GetPosition(translate);
 
 	bx::mtxTranslate(mtx, translate[0], translate[1], translate[2]);

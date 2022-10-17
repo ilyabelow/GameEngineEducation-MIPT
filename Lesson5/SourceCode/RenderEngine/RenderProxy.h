@@ -15,6 +15,10 @@ public:
 	}
 	void SetPosition(float position[3]);
 
+	bool ShouldBeRendered() const;
+	void SetRenderState(bool state);
+
 	float m_vPosition[3];
+	bool m_renderState;
 };
 

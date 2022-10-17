@@ -2,21 +2,10 @@
 
 #include "../RenderObject.h"
 
-namespace
-{
-	struct PosColorVertex
-	{
-		float x;
-		float y;
-		float z;
-		uint32_t abgr;
-	};
-};
-
 class RENDERENGINE_API CubeRenderObject final : public RenderObject
 {
 public:
-	CubeRenderObject(RenderProxy* pRenderProxy);
+	CubeRenderObject(RenderProxy * pRenderProxy);
 
 	virtual void* GetVertices() const override { return (void*)s_cubeVertices; }
 	virtual UINT32 GetVerticesSize() const override { return sizeof(s_cubeVertices); }

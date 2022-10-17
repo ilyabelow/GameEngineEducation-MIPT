@@ -20,6 +20,7 @@ class RenderEngine;
 enum ERenderCommand : UINT32
 {
 	RC_CreateCubeRenderObject = 0,
+	RC_CreateIcosahedronRenderObject
 };
 
 class RENDERENGINE_API RenderThread
@@ -49,7 +50,7 @@ private:
 	bool m_commandListIsReady = false;
 
 	RenderEngine* const m_pRenderEngine;
-	
+
 	size_t m_nCurrFrame = 0;
 	size_t m_nFrameToFill = 0;
 
