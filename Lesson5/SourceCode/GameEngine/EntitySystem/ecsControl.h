@@ -6,7 +6,7 @@ struct Bullet {};
 struct Target {};
 ;
 struct JumpSpeed { float val; };
-struct GiveGun { flecs::entity bullet; int numberOfBullets; };
+struct GiveGun { flecs::entity bullet; int numberOfBullets; bool shootKeyPressed = false; };
 
 struct AddToMagazine { int val; };
 struct ReloadTimer { int numberOfBulletsToAdd; float time; float timeElapsed = 0; };

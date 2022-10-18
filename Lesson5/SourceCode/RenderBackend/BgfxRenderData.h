@@ -20,6 +20,8 @@ public:
 	bgfx::ProgramHandle GetProgramHandle() { return m_ProgramHandle; }
 	virtual void GetPosition(float* result) override;
 	virtual void SetPosition(float position[3]) override;
+	virtual float GetScale() const override;
+	virtual void SetScale(float value);
 
 private:
 	bgfx::VertexLayout m_Layout = bgfx::VertexLayout();
@@ -28,5 +30,6 @@ private:
 	bgfx::ProgramHandle m_ProgramHandle = bgfx::ProgramHandle();
 
 	float m_vPosition[3];
+	float m_scale;
 };
 

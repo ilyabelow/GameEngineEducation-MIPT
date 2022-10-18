@@ -1,19 +1,21 @@
 #include "ScriptSystem.h"
-
+#include "ScriptProxy.h"
 
 CScriptSystem::CScriptSystem()
 {
     return;
 }
 
-void CScriptSystem::Update() {
-
+void CScriptSystem::Update(float dt)
+{
+    for (auto& script : m_scripts)
+    {
+        script->BindValue("delta_time", dt);
+        script->Execute();
+    }
 }
 
-IScriptProxy* CScriptSystem::CreateProxy(const char* filename) {
-  return nullptr;
-}
-
-void CScriptSystem::ProcessScript(IScriptProxy* scriptProxy) {
-
+std::shared_ptr<CScriptProxy> CScriptSystem::CreateProxy(const char* filename)
+{
+    return m_scripts.emplace_back(std::make_unique<CScriptProxy>(filename));
 }

@@ -40,3 +40,13 @@ void BgfxRenderData::GetPosition(float* result)
 	result[1] = m_vPosition[1];
 	result[2] = m_vPosition[2];
 }
+
+float BgfxRenderData::GetScale() const
+{
+	return m_scale;
+}
+
+void BgfxRenderData::SetScale(float value)
+{
+	m_scale = value;
+}

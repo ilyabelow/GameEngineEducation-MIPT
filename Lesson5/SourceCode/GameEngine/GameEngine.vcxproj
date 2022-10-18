@@ -78,7 +78,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)..\..\SDKs\bgfx\bimg\include\;$(SolutionDir)..\..\SDKs\bgfx\bx\include\;$(SolutionDir)..\..\SDKs\bgfx\bgfx\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\..\SDKs\lua\src;$(SolutionDir)..\..\SDKs\sol2\include;$(SolutionDir)..\..\SDKs\bgfx\bimg\include\;$(SolutionDir)..\..\SDKs\bgfx\bx\include\;$(SolutionDir)..\..\SDKs\bgfx\bgfx\include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</OutDir>
@@ -105,7 +105,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\SDKs\flecs\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\inih\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\bgfx\lib\Win32;$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);RenderEngine.lib;bgfxDebug.lib;bimg_decodeDebug.lib;bimgDebug.lib;bxDebug.lib;RenderBackend.lib;inih.lib;flecs.lib;ScriptSystem.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);RenderEngine.lib;bgfxDebug.lib;bimg_decodeDebug.lib;bimgDebug.lib;bxDebug.lib;RenderBackend.lib;inih.lib;flecs.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -127,7 +127,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\SDKs\flecs\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\inih\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\bgfx\lib\Win32;$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);RenderEngine.lib;bgfxRelease.lib;bimg_decodeRelease.lib;bimgRelease.lib;bxRelease.lib;RenderBackend.lib;inih.lib;flecs.lib;ScriptSystem.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);RenderEngine.lib;bgfxRelease.lib;bimg_decodeRelease.lib;bimgRelease.lib;bxRelease.lib;RenderBackend.lib;inih.lib;flecs.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -137,15 +137,15 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\SDKs\flecs\src;$(SolutionDir)..\..\SDKs\inih\include;$(SolutionDir)\RenderEngine\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\SDKs\lua\src;$(SolutionDir)..\..\SDKs\sol2\sol2\include;$(SolutionDir)..\..\SDKs\flecs\src;$(SolutionDir)..\..\SDKs\inih\include;$(SolutionDir)\RenderEngine\</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\SDKs\flecs\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\inih\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\bgfx\lib\x64;$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies);RenderEngine.lib;bgfxDebug.lib;bimg_decodeDebug.lib;bimgDebug.lib;bxDebug.lib;RenderBackend.lib;inih.lib;flecs.lib;ScriptSystem.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\SDKs\lua\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\flecs\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\inih\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\bgfx\lib\x64;$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);ScriptSystem.lib;RenderEngine.lib;bgfxDebug.lib;bimg_decodeDebug.lib;bimgDebug.lib;bxDebug.lib;RenderBackend.lib;inih.lib;flecs.lib;lua.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -167,10 +167,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\SDKs\flecs\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\inih\lib\$(Platform)\$(Configuration)\;$(SolutionDir)..\..\SDKs\bgfx\lib\x64;$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);RenderEngine.lib;bgfxRelease.lib;bimg_decodeRelease.lib;bimgRelease.lib;bxRelease.lib;RenderBackend.lib;inih.lib;flecs.lib;ScriptSystem.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);RenderEngine.lib;bgfxRelease.lib;bimg_decodeRelease.lib;bimgRelease.lib;bxRelease.lib;RenderBackend.lib;inih.lib;flecs.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EntitySystem\ecsScript.h" />
     <ClInclude Include="EntitySystem\ecsControl.h" />
     <ClInclude Include="EntitySystem\ecsMesh.h" />
     <ClInclude Include="EntitySystem\ecsPhys.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="InputHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EntitySystem\ecsScript.cpp" />
     <ClCompile Include="EntitySystem\ecsControl.cpp" />
     <ClCompile Include="EntitySystem\ecsMesh.cpp" />
     <ClCompile Include="EntitySystem\ecsPhys.cpp" />
