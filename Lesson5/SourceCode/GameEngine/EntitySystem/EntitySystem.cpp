@@ -39,17 +39,13 @@ EntitySystem::EntitySystem(RenderEngine* renderEngine, InputHandler* inputHandle
   auto gun = ecs.entity()
     .set(Position{ 0.f, 0.f, -3.f })
     .set(Velocity{ 0.f, 0.f, 0.f })
-    .set(Speed{ 10.f })
     .set(FrictionAmount{ 2.0f })
-    .set(JumpSpeed{ 10.f })
     .set(Gravity{ 0.f, -9.8065f, 0.f })
     .set(BouncePlane{ 0.f, 1.f, 0.f, 0.f })
     .set(Bounciness{ 0.3f })
     .set(GiveGun{ bullet, 6 })
     .set(ReloadTimer{ 6, 2.0f })
-    .set(Scripts(
-        "../../../Assets/Scripts/control-movement.lua",
-        "../../../Assets/Scripts/control-shoot.lua"))
+    .set(Scripts("../../../Assets/Scripts/gun_control_script.lua"))
     .add<CubeMesh>();
 
   auto target = ecs.prefab()

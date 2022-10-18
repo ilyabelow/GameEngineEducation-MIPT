@@ -8,16 +8,16 @@
 class SCRIPTSYSTEM_API CScriptProxy final : public IScriptProxy
 {
 public:
-    CScriptProxy(const std::string& filename);
+    CScriptProxy(const char* filename);
     virtual void Execute() override;
-    template<typename T>
-    void BindValue(const std::string& name, T&& value)
-    {
-        lua_script[name] = std::forward<T>(value);
-    }
     sol::state& GetState();
+
+    template<typename T>
+    void PassValueToLuaScript(const char* name, T&& value) {
+      lua_script[name] = std::forward<T>(value);
+    }
 private:
-    sol::bytecode m_script;
+    sol::bytecode bytecode_script;
     sol::state lua_script;
 };
 

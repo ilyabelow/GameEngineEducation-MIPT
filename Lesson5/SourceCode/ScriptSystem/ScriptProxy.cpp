@@ -1,21 +1,16 @@
 #include "ScriptProxy.h"
 
-CScriptProxy::CScriptProxy(const std::string& filename)
-{
+CScriptProxy::CScriptProxy(const char* filename) {
     lua_script.open_libraries(sol::lib::base);
-    auto load_res = lua_script.load_file(filename);
-    assert(load_res.valid());
+    sol::load_result load_res = lua_script.load_file(filename);
     sol::protected_function target = load_res;
-    m_script = target.dump();
+    bytecode_script = target.dump();
 }
 
-void CScriptProxy::Execute()
-{
-    auto res = lua_script.safe_script(m_script.as_string_view(), sol::script_throw_on_error);
-    assert(res.valid());
+void CScriptProxy::Execute() {
+    sol::protected_function_result res = lua_script.safe_script(bytecode_script.as_string_view(), sol::script_throw_on_error);
 }
 
-sol::state& CScriptProxy::GetState()
-{
+sol::state& CScriptProxy::GetState() {
     return lua_script;
 }
