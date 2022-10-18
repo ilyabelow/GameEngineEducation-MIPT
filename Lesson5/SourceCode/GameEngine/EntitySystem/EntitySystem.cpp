@@ -6,7 +6,7 @@
 #include "ecsScript.h"
 
 EntitySystem::EntitySystem(RenderEngine* renderEngine, InputHandler* inputHandler, IScriptSystem* scriptSystem):
-  creatableMaxCount(30)
+  entitiesMaxCount(30)
 {
   ecs.entity("inputHandler")
     .set(InputHandlerPtr{ inputHandler });
@@ -33,8 +33,8 @@ EntitySystem::EntitySystem(RenderEngine* renderEngine, InputHandler* inputHandle
   register_ecs_phys_systems(ecs);
   register_ecs_script_systems(ecs);
 
-  for (int i = 0; i < creatableMaxCount; i++)
-    ecs.entity().add<Creatable>();
+  for (int i = 0; i < entitiesMaxCount; i++)
+    ecs.entity().add<Created>();
 
   auto gun = ecs.entity()
     .set(Position{ 0.f, 0.f, -3.f })
@@ -75,10 +75,10 @@ EntitySystem::EntitySystem(RenderEngine* renderEngine, InputHandler* inputHandle
 
 void EntitySystem::Update()
 {
-  static auto creatableQuery = ecs.query<Creatable>();
+  static auto toCreateQuery = ecs.query<Created>();
   ecs.progress();
-  int creatableCount = 0;
-  creatableQuery.each([&](Creatable&) { creatableCount += 1; });
-  for (int i = creatableCount; i < creatableMaxCount; i++)
-      ecs.entity().add<Creatable>();
+  int createdEntitiesCount = 0;
+  toCreateQuery.each([&](Created&) { createdEntitiesCount++; });
+  for (int i = createdEntitiesCount; i < entitiesMaxCount; ++i)
+    ecs.entity().add<Created>();
 }

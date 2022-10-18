@@ -14,7 +14,7 @@ public:
 
 	void Update();
 private:
-	int creatableMaxCount;
 	flecs::world ecs;
+	int entitiesMaxCount;
 };
 

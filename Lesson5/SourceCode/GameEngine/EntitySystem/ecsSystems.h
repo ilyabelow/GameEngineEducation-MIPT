@@ -14,5 +14,3 @@ struct ScriptSystemPtr
 {
   class IScriptSystem* ptr;
 };
-
-struct Creatable {};
