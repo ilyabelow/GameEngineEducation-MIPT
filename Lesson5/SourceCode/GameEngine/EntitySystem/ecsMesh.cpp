@@ -30,9 +30,9 @@ void register_ecs_mesh_systems(flecs::world& ecs)
 
 
             float position[3];
-            position[0] = 0.0f;
-            position[1] = 0.0f;
-            position[2] = 0.0f;
+            position[0] = -50.f;
+            position[1] = -50.f;
+            position[2] = -50.f;
 
             renderProxy->SetPosition(position);
 
@@ -61,9 +61,9 @@ void register_ecs_mesh_systems(flecs::world& ecs)
             }
 
             float position[3];
-            position[0] = 0.0f;
-            position[1] = 0.0f;
-            position[2] = 0.0f;
+            position[0] = -50.f;
+            position[1] = -50.f;
+            position[2] = -50.f;
 
             renderProxy->SetPosition(position);
 
