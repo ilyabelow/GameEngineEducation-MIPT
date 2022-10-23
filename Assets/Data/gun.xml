@@ -1,0 +1,10 @@
+<entities>
+	<entity name="gun">
+		<model mesh="Cube"/>
+		<transform position="0.0,0.0,-3.0" velocity="0.0,0.0,0.0"/>
+		<physics bounce_plane="0.0,1.0,0.0,0.0" bounciness="0.3"
+				 gravity="0.0,-9.8065,0.0" friction_amount="2.0"/>
+		<gun reload_timer="6,2.0"/>
+		<script script_name="gun_control_script.lua"/>
+	</entity>
+</entities>
