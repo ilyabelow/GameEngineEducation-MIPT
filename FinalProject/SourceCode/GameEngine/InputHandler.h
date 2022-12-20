@@ -13,6 +13,8 @@ struct CursorPosition {
 	long x, y;
 };
 
+typedef std::bitset<eIC_Max> InputState;
+
 class InputHandler
 {
 public:
@@ -21,6 +23,7 @@ public:
 	void Update();
 
 	const std::bitset<eIC_Max>& GetInputState() const;
+	const std::bitset<eIC_Max>& GetClickedState() const;
 	const CursorPosition GetMouseCoordinates();
 
 private:
@@ -46,7 +49,9 @@ private:
 	TInputEventMap m_inputEventMap;
 	TCommandSymbolMap m_commandSymbolMap;
 
-	std::bitset<eIC_Max> m_InputState;
+	InputState m_InputState;
+	InputState m_ClickedState;
+
 	CursorPosition m_cursorPosition;
 	HWND m_hwnd;
 };

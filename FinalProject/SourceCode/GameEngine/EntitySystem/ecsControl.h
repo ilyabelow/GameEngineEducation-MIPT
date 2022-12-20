@@ -1,6 +1,8 @@
 #pragma once
 #include "flecs.h"
 #include <sstream>
+#include "../InputHandler.h"
+#include "../Serializer.h"
 
 struct Controllable {};
 struct Bullet {};
@@ -24,8 +26,17 @@ struct ReloadTimer {
 	//}
 };
 struct Respawnable { flecs::entity e; };
-struct RespawnTimer { flecs::entity e; float time; float timeElapsed = 0; };
+struct RespawnTimer { flecs::entity e; float time; float timeElapsed = 0;};
+struct InputStatePtr { const InputState* inputState; };
+struct Destruct {};
+struct Remote {};
+struct Local {};
 
+struct Sync {
+	Serializable::Type type;
+	float timeToSync;
+	float timeElapsed = 0;
+};
 
 void register_ecs_control_systems(flecs::world& ecs);
 

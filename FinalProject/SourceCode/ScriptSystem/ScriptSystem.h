@@ -10,5 +10,5 @@ public:
 	virtual std::shared_ptr<CScriptProxy> CreateProxy(const char* filename) override;
 
 private:
-	std::vector<std::shared_ptr<CScriptProxy>> bytecode_scripts;
+	std::vector<std::weak_ptr<CScriptProxy>> bytecode_scripts;
 };

@@ -13,10 +13,12 @@
 #include "InputHandler.h"
 #include "EntitySystem/EntitySystem.h"
 #include "../ScriptSystem/ScriptSystem.h"
+#include "NetworkManager.h"
 
 #include <format>
 #include <sstream>
 #include <iostream>
+#include <memory>
 
 #define Log(fmt, ...) \
 { \
@@ -39,14 +41,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-    GameTimer timer;
-
-    RenderEngine* renderEngine = new RenderEngine(hInstance);
-    RenderThread* renderThread = renderEngine->GetRT();
-    InputHandler* inputHandler = new InputHandler();
-    CScriptSystem* scriptSystem = new CScriptSystem();
-
-    EntitySystem* entitySystem = new EntitySystem(renderEngine, inputHandler, scriptSystem);
 
     MSG msg = { 0 };
 
@@ -56,8 +50,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     freopen_s(&fDummy, "CONOUT$", "w", stderr);
     freopen_s(&fDummy, "CONOUT$", "w", stdout);
 
+    GameTimer timer;
+
+    RenderEngine* renderEngine = new RenderEngine(hInstance);
+    RenderThread* renderThread = renderEngine->GetRT();
+    InputHandler* inputHandler = new InputHandler();
+    CScriptSystem* scriptSystem = new CScriptSystem();
+
+    EntitySystem* entitySystem = new EntitySystem(renderEngine, inputHandler, scriptSystem);
+    auto networkManager = std::make_unique<NetworkManager>(inputHandler, entitySystem);
+
+
     timer.Start();
     timer.Reset();
+
 
     // Main message loop:
     while (msg.message != (WM_QUIT | WM_CLOSE))
@@ -69,9 +75,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
+            networkManager->OnFrameBegin();
+
             inputHandler->Update();
             scriptSystem->Update(timer.DeltaTime());
-            entitySystem->Update();            
+            entitySystem->Update();  
+
+            networkManager->OnFrameEnd();
 
             timer.Tick();
 

@@ -33,8 +33,8 @@ private:
 	HWND InitMainWindow(HINSTANCE hInstance);
 	HWND m_hwnd = nullptr;
 
-	long m_Width = 800;
-	long m_Height = 600;
+	long m_Width = 400;
+	long m_Height = 300;
 
 	RenderThread* m_pRT;
 	IRenderBackend* m_pRenderBackend;

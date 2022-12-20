@@ -17,6 +17,8 @@ InputHandler::InputHandler()
 	MapCommandSymbol("GoBackward", eIC_GoBackward, "s");
 	MapCommandSymbol("Jump", eIC_Jump, "space");
 	MapCommandSymbol("Shoot", eIC_Shoot, "LMB");
+	MapCommandSymbol("BecomeServer", eIC_BecomeServer, "o");
+	MapCommandSymbol("BecomeClient", eIC_BecomeClient, "p");
 
 	LoadConfiguration();
 
@@ -60,15 +62,32 @@ void InputHandler::Remap()
 // We used int as return type just for demonstration. It should be done another way
 void InputHandler::Update()
 {
+	if (GetActiveWindow() != m_hwnd) {
+		m_InputState.reset();
+		m_ClickedState.reset();
+		return;
+	}
 	for (auto& it : m_inputEventMap)
 	{
-		m_InputState.set(it.second, IsKeyDown(it.first));
+		bool isDown = IsKeyDown(it.first);
+		if (!m_InputState.test(it.second) && isDown) {
+			m_ClickedState.set(it.second, true);
+		}
+		if (m_InputState.test(it.second)) {
+			m_ClickedState.set(it.second, false);
+		}
+		m_InputState.set(it.second, isDown);
 	}
 }
 
 const std::bitset<eIC_Max>& InputHandler::GetInputState() const
 {
 	return m_InputState;
+}
+
+const std::bitset<eIC_Max>& InputHandler::GetClickedState() const
+{
+	return m_ClickedState;
 }
 
 const CursorPosition InputHandler::GetMouseCoordinates() {

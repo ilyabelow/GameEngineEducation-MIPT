@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{2ce555bc-e029-4b96-9f60-75d7f69236ab}</ProjectGuid>
-    <RootNamespace>RenderBackend</RootNamespace>
+    <ProjectGuid>{68003c3e-b71d-4be7-8aae-7532891250f7}</ProjectGuid>
+    <RootNamespace>NetworkEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,47 +71,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>RenderBackend</TargetName>
     <OutDir>$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</OutDir>
     <IntDir>Bin\$(Configuration)$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)..\..\SDKs\bgfx\bimg\include\;$(SolutionDir)..\..\SDKs\bgfx\bx\include\compat\msvc;$(SolutionDir)..\..\SDKs\bgfx\bx\include\;$(SolutionDir)..\..\SDKs\bgfx\bgfx\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>RenderBackend</TargetName>
-    <OutDir>$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</OutDir>
-    <IntDir>Bin\$(Configuration)$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)..\..\SDKs\bgfx\bimg\include\;$(SolutionDir)..\..\SDKs\bgfx\bx\include\compat\msvc;$(SolutionDir)..\..\SDKs\bgfx\bx\include\;$(SolutionDir)..\..\SDKs\bgfx\bgfx\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>RenderBackend</TargetName>
-    <OutDir>$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</OutDir>
-    <IntDir>Bin\$(Configuration)$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)..\..\SDKs\bgfx\bimg\include\;$(SolutionDir)..\..\SDKs\bgfx\bx\include\compat\msvc;$(SolutionDir)..\..\SDKs\bgfx\bx\include\;$(SolutionDir)..\..\SDKs\bgfx\bgfx\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetName>RenderBackend</TargetName>
-    <OutDir>$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</OutDir>
-    <IntDir>Bin\$(Configuration)$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)..\..\SDKs\bgfx\bimg\include\;$(SolutionDir)..\..\SDKs\bgfx\bx\include\compat\msvc;$(SolutionDir)..\..\SDKs\bgfx\bx\include\;$(SolutionDir)..\..\SDKs\bgfx\bgfx\include\;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)..\..\SDKs\enet\include;$(SolutionDir)..\..\Matchmaker\SourceCode\Matchmaker;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;RENDERBACKEND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);BX_CONFIG_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;NETWORKENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\SDKs\bgfx\lib\Win32;$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);bgfxDebug.lib;bimg_decodeDebug.lib;bimgDebug.lib;bxDebug.lib;RenderEngine.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -120,13 +96,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;RENDERBACKEND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;NETWORKENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,29 +107,25 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\SDKs\bgfx\lib\Win32;$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);bgfxRelease.lib;bimg_decodeRelease.lib;bimgRelease.lib;bxRelease.lib;RenderEngine.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;RENDERBACKEND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);BX_CONFIG_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;NETWORKENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\SDKs\bgfx\lib\x64\;$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);bgfxDebug.lib;bimg_decodeDebug.lib;bimgDebug.lib;bxDebug.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\ilyabelow\source\repos\GameEngineEducation-MIPT\SDKs\enet;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>enet64.lib;ws2_32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -165,13 +134,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;RENDERBACKEND_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;NETWORKENGINE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -179,21 +145,20 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\SDKs\bgfx\lib\x64;$(SolutionDir)..\Bin\$(Configuration)$(Platform)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);bgfxRelease.lib;bimg_decodeRelease.lib;bimgRelease.lib;bxRelease.lib;RenderEngine.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BgfxRenderData.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="IRenderBackend.h" />
-    <ClInclude Include="IRenderData.h" />
-    <ClInclude Include="RenderBackend.h" />
-    <ClInclude Include="Shaders\ShadersHelper.h" />
+    <ClInclude Include="NetworkBase.h" />
+    <ClInclude Include="NetworkEngine.h" />
+    <ClInclude Include="Server.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BgfxRenderData.cpp" />
-    <ClCompile Include="RenderBackend.cpp" />
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="NetworkBase.cpp" />
+    <ClCompile Include="NetworkEngine.cpp" />
+    <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

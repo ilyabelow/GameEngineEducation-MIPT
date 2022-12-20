@@ -11,7 +11,6 @@ entity     = world:getEntity(entity_id)
 velocity   = entity:getVelocity()
 position   = entity:getPosition()
 plane      = entity:getBouncePlane()
-inputState = inputHandler:getInputState()
 
 gun         = entity:getGun()
 reloadTimer = entity:getReloadTimer()

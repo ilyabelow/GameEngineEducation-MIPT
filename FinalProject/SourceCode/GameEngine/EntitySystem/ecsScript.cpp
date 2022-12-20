@@ -9,6 +9,7 @@
 
 #include "../ScriptSystem/ScriptProxy.h"
 #include "../ScriptSystem/ScriptSystem.h"
+#include "EntitySystem.h"
 
 
 void initialize_script_state(flecs::world& ecs, std::shared_ptr<CScriptProxy> scriptProxy) {
@@ -41,7 +42,7 @@ void initialize_script_state(flecs::world& ecs, std::shared_ptr<CScriptProxy> sc
     "numberOfBullets", &GiveGun::numberOfBullets,
     "shootKeyPressed", &GiveGun::shootKeyPressed);
   state.new_usertype<flecs::world>("World",
-    "createEntity", [](flecs::world& world) {return world.entity(); },
+    "createEntity", [](flecs::world& world) {return world.entity().add<Local>(); },
     "getEntity", [](flecs::world& world, flecs::entity_t id) { return world.entity(id); });
   state.new_usertype<flecs::entity>("Entity",
     "getVelocity", [](flecs::entity e) { return e.get<Velocity>(); },
@@ -67,18 +68,19 @@ void initialize_script_state(flecs::world& ecs, std::shared_ptr<CScriptProxy> sc
 void register_ecs_script_systems(flecs::world& ecs)
 {
   static auto scriptSystemQuery = ecs.query<ScriptSystemPtr>();
-  static auto inputHandlerQuery = ecs.query<InputHandlerPtr>();
-  ecs.system<Scripts>()
-    .each([&](flecs::entity e, Scripts& scripts)
-      {inputHandlerQuery.each([&](InputHandlerPtr& inputHandler) {
-          scriptSystemQuery.each([&](ScriptSystemPtr& scriptSystem) {
-              for (const auto& script : scripts.names){
-                auto scriptProxy = scriptSystem.ptr->CreateProxy(script.c_str());
-                initialize_script_state(ecs, scriptProxy);
-                scriptProxy->PassValueToLuaScript("inputHandler", std::ref(*inputHandler.ptr));
-                scriptProxy->PassValueToLuaScript("entity_id", e.id());
-              }
-            });
+  ecs.system<Scripts, InputStatePtr*>()
+    .each([&](flecs::entity e, Scripts& scripts, InputStatePtr* is)
+      {
+        scriptSystemQuery.each([&](ScriptSystemPtr& scriptSystem) {
+            for (const auto& script : scripts.names){
+            auto scriptProxy = scriptSystem.ptr->CreateProxy(script.c_str());
+            initialize_script_state(ecs, scriptProxy);
+            if (is) {
+                scriptProxy->PassValueToLuaScript("inputState", std::ref(is->inputState));
+            }
+            scriptProxy->PassValueToLuaScript("entity_id", e.id());
+			e.set(ScriptProxyPtr{ scriptProxy });
+            }
         });
         e.remove<Scripts>();
       });

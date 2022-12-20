@@ -5,6 +5,7 @@
 #include "ecsControl.h"
 #include "ecsSystems.h"
 #include "ObjectRenderProxy.h"
+#include <iostream>
 
 static float rand_flt(float from, float to)
 {
@@ -19,7 +20,7 @@ static bool HitboxesIntersect(const Position& pos, const Hitbox& hitbox, const P
 }
 
 void register_ecs_phys_systems(flecs::world& ecs)
-{
+{  
   static auto hitboxQuery = ecs.query<
     const Position, const Hitbox, const Target, const AddToMagazine*, RenderProxyPtr*, Respawnable*
   >();
@@ -92,52 +93,49 @@ void register_ecs_phys_systems(flecs::world& ecs)
         pos.z += rand_flt(-shiver.val, shiver.val);
       });
 
-  ecs.system<const Position, const Hitbox, const Bullet, RenderProxyPtr*>()
-    .each([&](flecs::entity e, const Position& pos, const Hitbox& box, const Bullet&, RenderProxyPtr* proxy) {
-    bool self_destruct = false;
+  ecs.system<const Position, const Hitbox, const Bullet>()
+    .each([&](flecs::entity e, const Position& pos, const Hitbox& box, const Bullet& bullet) {
     hitboxQuery.each([&](
       flecs::entity other, const Position& other_pos, const Hitbox& other_box,
       const Target& enemy, const AddToMagazine* magBonus, RenderProxyPtr* other_proxy, Respawnable* respawn
       ) {
         if (e.id() != other.id() && HitboxesIntersect(pos, box, other_pos, other_box)) {
-          if (other_proxy)
-            other_proxy->ptr->SetRenderState(false);
+          if (magBonus) {
+              giveGunQuery.each(
+                  [&](GiveGun& gun)
+                  {
+                    gun.numberOfBullets += magBonus->val;
+                  }
+              );
+          }
 
-          if (magBonus)
-            giveGunQuery.each([&](GiveGun& gun) {
-            gun.numberOfBullets += magBonus->val;
-              });
 
           if (respawn) {
             int targetsToSpawn = 1;
             int targetsSpawned = 0;
-            toCreateQuery.each([&](flecs::entity new_e, Created&) {
+            toCreateQuery.each([&](flecs::entity new_e, const Created& created) {
               if (targetsSpawned++ < targetsToSpawn)
                 new_e.mut(e)
                 .set(Position{ other_pos.x, 0.f, other_pos.z })
                 .set(RespawnTimer{ respawn->e, 5.0f })
                 .remove<Created>();
               });
-            other.mut(e).destruct();
-            self_destruct = true;
+
+            other.remove< Respawnable>();
+            
+            other.add<Destruct>();
+            e.add<Destruct>();
           }
         }
       });
-    if (self_destruct) {
-      if (proxy)
-        proxy->ptr->SetRenderState(false);
-      e.destruct();
-    }
 
       });
 
-  ecs.system<DestroyTimer, RenderProxyPtr*>()
-    .each([&](flecs::entity e, DestroyTimer& timer, RenderProxyPtr* proxy) {
+  ecs.system<DestroyTimer>("Bullet destruction on timer")
+    .each([&](flecs::entity e, DestroyTimer& timer) {
     timer.timeElapsed += ecs.delta_time();
     if (timer.timeElapsed > timer.time) {
-      if (proxy)
-        proxy->ptr->SetRenderState(false);
-      e.destruct();
+		e.add<Destruct>();
     }
       });
 
@@ -146,6 +144,7 @@ void register_ecs_phys_systems(flecs::world& ecs)
     timer.timeElapsed += ecs.delta_time();
     if (timer.timeElapsed > timer.time)
       e.is_a(timer.e)
+       .add<Local>()
       .add<CubeMesh>()
       .set(Respawnable{ timer.e })
       .remove<RespawnTimer>();

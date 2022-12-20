@@ -1,7 +1,6 @@
 #include "ecsMesh.h"
 #include "ecsSystems.h"
 #include "ecsPhys.h"
-#include "flecs.h"
 #include "RenderThread.h"
 #include "RenderEngine.h"
 #include "ObjectRenderProxy.h"
